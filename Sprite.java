@@ -1,8 +1,8 @@
 package GhostAndGoblins;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -14,7 +14,8 @@ import javax.imageio.ImageIO;
  */
 
 abstract public class Sprite implements CanCollide {
-private int x = 0;
+
+    private int x = 0;
     private int y = 0;
     private BufferedImage image = null;
 
@@ -109,8 +110,8 @@ private int x = 0;
     
     void draw(Graphics2D g2) {
         g2.drawImage(image, x, y, null);
-    }mage, x, y, null);
     }
 }
+
 
 
