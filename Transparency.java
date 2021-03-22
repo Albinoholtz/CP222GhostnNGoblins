@@ -1,11 +1,9 @@
-package GhostsAndGoblins;
-
 import java.awt.*;
 import java.awt.image.*;
 
 public class Transparency {
-  public static BufferedImage makeColorTransparent
-    (Image im, final Color color) {
+  public static Image makeColorTransparent
+    (Image spriteSheetImg, final Color color) {
     ImageFilter filter = new RGBImageFilter() {
       // the color we are looking for... Alpha bits are set to opaque
       public int markerRGB = color.getRGB() | 0xFF000000;
@@ -22,7 +20,7 @@ public class Transparency {
         }
       }; 
 
-    ImageProducer ip = new FilteredImageSource(im.getSource(), filter);
-    return (BufferedImage) Toolkit.getDefaultToolkit().createImage(ip);
+    ImageProducer ip = new FilteredImageSource(spriteSheetImg.getSource(), filter);
+    return Toolkit.getDefaultToolkit().createImage(ip);
     }
 }
