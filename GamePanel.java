@@ -1,8 +1,11 @@
-/**
- * 
- */
-package GhostAndGoblins;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 /**
@@ -15,6 +18,7 @@ public class GamePanel extends JComponent {
 	private Timer myTimer;
 	private Image img;
 	private int scrolling;
+	private ArrayList<Sprite> spriteList = new ArrayList<Sprite>();
 	
 	public GamePanel() {
 		
@@ -43,13 +47,21 @@ public class GamePanel extends JComponent {
 		Timer timer = new Timer();
 		timer.schedule(gameTimer, 1000, 1000);
 		
+		
+		//Create Knight
+		Knight knight = new Knight(250, 250);
+		spriteList.add(knight);
+		
 	}
 	
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D graphics = (Graphics2D) g;
 		graphics.drawImage(img, scrolling,100, null);
+		
+		// draw sprites
+		for (int i = 0; i < spriteList.size(); i++) {
+			spriteList.get(i).draw(graphics);
+		}
 	}
-	
-  
 }
