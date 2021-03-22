@@ -1,6 +1,5 @@
-package GhostAndGoblins;
-
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 /**
@@ -8,7 +7,7 @@ import java.awt.image.BufferedImage;
  * This is the class for the player character. This player 
  * should be able to move using keyboard inputs.
  */
-public abstract class Knight extends Sprite {
+public class Knight extends Sprite {
 
 	BufferedImage currentImage = null;
 	BufferedImage[] runImg = new BufferedImage[8];
@@ -26,23 +25,27 @@ public abstract class Knight extends Sprite {
 	public Knight(int _x, int _y) {
 		super(_x, _y);
 		
-		BufferedImage spriteSheet = getImageFile("knight.png");
+		Image spriteSheetImg = (Image) getImageFile("knight.png");
 		
-		Color backPink = new Color(247,103,211);
-		Color backBlue = new Color(109,137,235);
-		Color backGreen = new Color(176,228,108);
-		Color backCyan = new Color(95,205,228);
+		Color backPink = new Color(252,105,216,255);
+		Color backBlue = new Color(109,137,235, 255);
+		Color backGreen = new Color(176,228,108, 255);
+		Color backCyan = new Color(95,205,228, 255);
 		
-		spriteSheet = Transparency.makeColorTransparent(currentImage, backBlue);
-		spriteSheet = Transparency.makeColorTransparent(currentImage, backPink);
-		spriteSheet = Transparency.makeColorTransparent(currentImage, backGreen);
-		spriteSheet = Transparency.makeColorTransparent(currentImage, backCyan);
+		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backBlue);
+		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backPink);
+		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backGreen);
+		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backCyan);
+		
+		
+		
+		BufferedImage spriteSheet = toBufferedImage(spriteSheetImg);
 		
 		BufferedImage[] allImg = new BufferedImage[80];
 		
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 8; j++) {
-				allImg[(10 * i) + j] = spriteSheet.getSubimage(j * 32, i * 32, 32, 32);
+				allImg[(8 * i) + j] = spriteSheet.getSubimage(j * 32, i * 32, 32, 32);
 			}
 		}
 		
@@ -59,16 +62,23 @@ public abstract class Knight extends Sprite {
 		
 		
 		currentImage = idleImg[0];
+		
 		setImage(currentImage);
 	}
 
 	
 	public void update() {
-
+		
 	}
 	
 	public void move() {
 		
+	}
+	
+	@Override
+	public boolean collidedWith(Sprite other) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
