@@ -1,8 +1,6 @@
-package GhostAndGoblins;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -33,7 +31,7 @@ abstract public class Sprite implements CanCollide {
     public BufferedImage getImageFile(String filename) {
     	BufferedImage spriteSheet = null;
     	try{
-			spriteSheet = ImageIO.read(getClass().getResource("knight.png"));
+			spriteSheet = ImageIO.read(new File(filename));
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(Exception e) {
@@ -42,6 +40,9 @@ abstract public class Sprite implements CanCollide {
     	return spriteSheet;
     }
     
+    public BufferedImage getImage() {
+		return image;
+    }
     
     public void setImage(BufferedImage newImage) {
     	image = newImage;
@@ -109,9 +110,34 @@ abstract public class Sprite implements CanCollide {
     //TODO change graphics type
     
     void draw(Graphics2D g2) {
-        g2.drawImage(image, x, y, null);
+        // scales and draws the image by 2
+        g2.drawImage(image, x, y, image.getWidth() * 2, image.getHeight() * 2, null);
+	}
+    
+    
+    /**
+     * Converts a given Image into a BufferedImage
+     * @param img The Image to be converted
+     * @return The converted BufferedImage
+     */
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // return the buffered image
+        return bimage;
     }
 }
-
 
 
