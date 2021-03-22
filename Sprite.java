@@ -14,20 +14,36 @@ import javax.imageio.ImageIO;
  */
 
 abstract public class Sprite implements CanCollide {
-
-    private int x = 0;
+private int x = 0;
     private int y = 0;
     private BufferedImage image = null;
 
-    public Sprite(String path, int _x, int _y) {
+    public Sprite(int _x, int _y) {
         x = _x;
         y = _y;
-        try {
-          image = ImageIO.read(new File(path));
-        } catch(IOException e) {
-          System.out.println(e);
-          System.exit(1);
-        }
+    }
+    
+    
+    /**
+     * @param filename
+     * @return BufferedImage of 'filename' if file was successfully loaded
+     * @return null if file was not successfully loaded
+     */
+    public BufferedImage getImageFile(String filename) {
+    	BufferedImage spriteSheet = null;
+    	try{
+			spriteSheet = ImageIO.read(getClass().getResource("knight.png"));
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+    	return spriteSheet;
+    }
+    
+    
+    public void setImage(BufferedImage newImage) {
+    	image = newImage;
     }
 
     public void setX(int new_x) {
@@ -91,9 +107,9 @@ abstract public class Sprite implements CanCollide {
     
     //TODO change graphics type
     
-    void draw(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.drawImage(image, x, y, null);
+    void draw(Graphics2D g2) {
+        g2.drawImage(image, x, y, null);
+    }mage, x, y, null);
     }
 }
 
