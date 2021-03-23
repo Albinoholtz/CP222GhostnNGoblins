@@ -16,6 +16,8 @@ public class Knight extends Sprite {
 	BufferedImage[] throwImg = new BufferedImage[4];
 	BufferedImage[] crouchImg = new BufferedImage[2];
 	BufferedImage[] crouchThrowImg = new BufferedImage[4];
+	String state = null;
+	boolean clothed = true;
 	
 	/**
 	 * @param path
@@ -62,13 +64,20 @@ public class Knight extends Sprite {
 		
 		
 		currentImage = idleImg[0];
-		
 		setImage(currentImage);
+		state = "running";
 	}
 
 	
-	public void update() {
-		
+	public void update(int time) {
+		switch (state) {
+		case "idle":
+			setImage(idleImg[0]);
+			break;
+		case "running:":
+			setImage(runImg[0 + ((int) (time/3 % 4))]);
+			break;
+		}
 	}
 	
 	public void move() {
