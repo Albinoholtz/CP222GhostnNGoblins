@@ -10,7 +10,6 @@ public class Structure extends Sprite {
 	
 	BufferedImage currentImage;
 	BufferedImage[] groundImgs = new BufferedImage[3];
-	boolean remove = false;
 
 	/**
 	 * @param path
@@ -59,18 +58,12 @@ public class Structure extends Sprite {
 	}
 
 	@Override
-	public void update() {
+	public void update(int time) {
 		if(getX() < -92) {
-			remove = true;
+			setRemove(true);
 		}
 		if(getX() > 828) {
-			remove = true;
+			setRemove(true);
 		}
-
 	}
-	
-	public boolean getRemove() {
-		return remove;
-	}
-
 }
