@@ -1,39 +1,22 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * @author William & Quinn
  *
  */
-public class GamePanel extends JFrame{
+public class GamePanel extends JPanel{
 	
 	private int fps = 60;
-	private int frameWidth = 736;
-	private int frameHeight = 758;
-	private int movedRight = 0;
-	private int movedLeft = 0;
-
-	private int myTimerDelay;
-	private Timer myTimer;
+	private int distance = 0;
 	private Image backgroundImg;
-	private Image foregroundImg;
 	private InputListener listener;
 	private boolean isRunning = true;
-	private BufferedImage backBuffer;
 	private int scrolling;
 	private ArrayList<Sprite> spriteList = new ArrayList<Sprite>();
 	ArrayList<Structure> groundArr = new ArrayList<Structure>();
@@ -52,12 +35,14 @@ public class GamePanel extends JFrame{
 			xCor += 46;
 			
 		}
+		
+		
 	}
 
 	public void run() {
 		//calls initialization to set up the frame
 		initialize();
-		
+		int updates = 0;
 		//runs while the game is going
 		while(isRunning) {
 			
@@ -66,14 +51,19 @@ public class GamePanel extends JFrame{
 			}
 			long time = System.currentTimeMillis();
 
-			update(time);
-			draw();
+			update(updates);
+			repaint();
 
 			time = (1000/fps) - (System.currentTimeMillis() - time);
 			if(time > 0) {
 				try {
 					Thread.sleep(time);
 				} catch (Exception e){}
+			}
+			
+			updates += 1;
+			if (updates > 600) {
+				updates = 0;
 			}
 		}
 		//"closes" the window when the game stops running
@@ -82,52 +72,58 @@ public class GamePanel extends JFrame{
 
 	public void initialize(){
 		//setting up all the stuffs
-		setTitle("Ghosts N' Goblins");
-		setSize(frameWidth, frameHeight);
-		setResizable(false);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setVisible(true);
-		getContentPane().setBackground(Color.BLACK);
-		
 		ImageIcon background = new ImageIcon("background.png");
 		backgroundImg = background.getImage();
 		
-		backBuffer = new BufferedImage(frameWidth, frameHeight, BufferedImage.TYPE_INT_RGB);
 		listener = new InputListener(this);
-		
+		repaint();
 		
 	}
 	
-	public void update(long time) {
-		
+	public void update(int updates) {
+
+		// Handle inputs
 		
 		if(listener.isKeyDown(KeyEvent.VK_RIGHT)) {
-			movedRight -= 2;
-			scrolling -= 1;
+			distance += 2;
+			
+			
+			// moves the sprites over based on player movement
 			for(int i = 0; i < groundArr.size(); i ++) {
 				groundArr.get(i).updateX(-2);
 			}
-			if(movedRight%46 == 0 ) {
+			for (int i = 0; i < spriteList.size(); i++) {
+				spriteList.get(i).updateX(-2);
+			}	
+			
+			// builds new ground
+			if(distance % 46 == 0 ) {
 				int lastX = groundArr.get(groundArr.size()-1).getX();
 				Structure ground = new Structure(lastX + 46, 580);
 				groundArr.add(ground);
 			}
 		
 		}
-		
 		if(listener.isKeyDown(KeyEvent.VK_LEFT)) {
-			movedLeft += 2;
-			scrolling += 1;
+			distance -= 2;
+			
+			// moves the sprites over based on player movement
 			for(int i = 0; i < groundArr.size(); i ++) {
 				groundArr.get(i).updateX(2);
 			}
-			if(movedLeft%46 == 0 ) {
+			for (int i = 0; i < spriteList.size(); i++) {
+				spriteList.get(i).updateX(2);
+			}
+				
+			// builds new ground
+			if(distance % 46 == 0 ) {
 				int firstX = groundArr.get(0).getX();
 				Structure ground = new Structure(firstX - 46, 580);
 				groundArr.add(0, ground);
 			}
-			
 		}
+		
+		
 		if(listener.isKeyDown(KeyEvent.VK_UP)) {
 			System.out.println("UP");
 		}
@@ -135,43 +131,49 @@ public class GamePanel extends JFrame{
 			System.out.println("DOWN");
 		}
 		
-		//check for collisions here 
 		
-		//update all sprites here
+		// Update all sprites/ground
 		
-		//removing ground if neccessary
-		
+		for (int i = 0; i < spriteList.size(); i++) {
+			Sprite currentSprite = spriteList.get(i);
+			//check for collisions here TODO
+			
+			//update non-structure sprites here
+			currentSprite.update(updates / 6);
+			//remove necessary non-structure sprites
+			if (currentSprite.isRemove()) {
+				spriteList.remove(i);
+			}
+		}	
 		for (int j = 0; j < groundArr.size(); j++) {
-			groundArr.get(j).update();
-			if(groundArr.get(j).getRemove() == true) {
+			Sprite currentGround = groundArr.get(j);
+			//check for collisions here TODO
+			
+			//update structure sprites here
+			currentGround.update(updates / 6);
+			//remove necessary non-structure sprites
+			if (currentGround.isRemove()) {
 				groundArr.remove(j);
 			}
-			
-		}
-		
+		}		
 	}
 	
-	public void draw() {
-		Graphics2D g = (Graphics2D) getGraphics();
-		Graphics bbg = backBuffer.getGraphics();
+	@Override
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
 		
-		bbg.setColor(Color.BLACK);
-		bbg.fillRect(0, 0, frameWidth, frameHeight);
-		g.drawImage(backgroundImg, scrolling, 150, 400 , 300, null);
+		g2.fillRect(0, 0, 736, 758);
+		g2.drawImage(backgroundImg, (int) distance/8, 150, 400 , 300, null);
 		//g.drawImage(backBuffer, 0, 0, this);
 	
 
-		//draw initial ground this should be in the initiator
+		// draw ground first
 		for (int j = 0; j < groundArr.size(); j++) {
-			groundArr.get(j).draw(g);
+			groundArr.get(j).draw(g2);
 		}
-		
+		// draw all other sprites
 		for(int i = 0; i < spriteList.size(); i ++) {
-			spriteList.get(i).draw(g);
+			spriteList.get(i).draw(g2);
 		}
-
-
 	}
-
-
 }
