@@ -16,6 +16,7 @@ abstract public class Sprite implements CanCollide {
     private int x = 0;
     private int y = 0;
     private BufferedImage image = null;
+    private boolean remove = false;
 
     public Sprite(int _x, int _y) {
         x = _x;
@@ -82,7 +83,17 @@ abstract public class Sprite implements CanCollide {
     return image.getHeight();
     }
    
-    abstract public void update();
+    public boolean isRemove() {
+		return remove;
+	}
+
+
+	public void setRemove(boolean remove) {
+		this.remove = remove;
+	}
+
+
+	abstract public void update(int time);
     
     /**
      * This method checks to see if two sprites overlap with each other. This will come
@@ -111,7 +122,7 @@ abstract public class Sprite implements CanCollide {
     
     void draw(Graphics2D g2) {
         // scales and draws the image by 2
-        g2.drawImage(image, x, y, image.getWidth() * 2, image.getHeight() * 2, null);
+        g2.drawImage(image, x, y, image.getWidth() * 3, image.getHeight() * 3, null);
 	}
     
     
@@ -139,5 +150,3 @@ abstract public class Sprite implements CanCollide {
         return bimage;
     }
 }
-
-
