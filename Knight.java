@@ -30,9 +30,9 @@ public class Knight extends Sprite {
 		Image spriteSheetImg = (Image) getImageFile("knight.png");
 		
 		Color backPink = new Color(252,105,216,255);
-		Color backBlue = new Color(109,137,235, 255);
-		Color backGreen = new Color(176,228,108, 255);
-		Color backCyan = new Color(95,205,228, 255);
+		Color backBlue = new Color(117,146,252,255);
+		Color backGreen = new Color(167,226,110,255);
+		Color backCyan = new Color(95,205,228,255);
 		
 		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backBlue);
 		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backPink);
@@ -74,8 +74,8 @@ public class Knight extends Sprite {
 		case "idle":
 			setImage(idleImg[0]);
 			break;
-		case "running:":
-			setImage(runImg[0 + ((int) (time/3 % 4))]);
+		case "running":
+			setImage(runImg[Math.abs(-3 + ((int) (time)) % 6)]);
 			break;
 		}
 	}
@@ -88,6 +88,16 @@ public class Knight extends Sprite {
 	public boolean collidedWith(Sprite other) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public void updateX(int delta) {
+		return;
+	}
+	
+	@Override
+	public void updateY(int delta) {
+		return;
 	}
 
 }
