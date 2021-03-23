@@ -1,6 +1,7 @@
-package GhostAndGoblins;
 import java.awt.Component;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 /**
  * @author William & Quinn
  * Listens for inputs
@@ -27,11 +28,12 @@ public class InputListener implements KeyListener
          */
         public boolean isKeyDown(int keyCode)
         {
+        	
                 if (keyCode > 0 && keyCode < 256)
                 {
                         return keys[keyCode];
                 }
-
+               
                 return false;
         }
 
@@ -41,10 +43,11 @@ public class InputListener implements KeyListener
          */
         public void keyPressed(KeyEvent e)
         {
-                if (e.getKeyCode() > 0 && e.getKeyCode() < 256)
-                {
-                        keys[e.getKeyCode()] = true;
-                }
+  
+        	if (e.getKeyCode() > 0 && e.getKeyCode() < 256)
+        	{
+        		keys[e.getKeyCode()] = true;
+        	}
         }
 
         /**
@@ -53,14 +56,23 @@ public class InputListener implements KeyListener
          */
         public void keyReleased(KeyEvent e)
         {
-                if (e.getKeyCode() > 0 && e.getKeyCode() < 256)
-                {
-                        keys[e.getKeyCode()] = false;
-                }
+        	if (e.getKeyCode() > 0 && e.getKeyCode() < 256)
+        	{
+        		keys[e.getKeyCode()] = false;
+        	}
         }
 
         /**
          * Not used
          */
         public void keyTyped(KeyEvent e){}
+
+		public int getKeyCode() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		
+
+		
 }
