@@ -2,6 +2,11 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.TimeUnit;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
@@ -17,11 +22,18 @@ public class Knight extends Sprite {
 	BufferedImage[] idleImg = new BufferedImage[2];
 	BufferedImage[] jumpImg = new BufferedImage[4];
 	BufferedImage[] throwImg = new BufferedImage[4];
+	BufferedImage[] dyingImg = new BufferedImage[4];
 	BufferedImage[] crouchImg = new BufferedImage[2];
 	BufferedImage[] crouchThrowImg = new BufferedImage[4];
+	int coolDown = 20;
+	boolean gameOver = false;
+	int dyingCount = 4;
 	String state = null;
 	String direction = null;
-	boolean armored = false;
+	boolean armored = true;
+	boolean hit = false;
+	boolean dead = false;
+	boolean dying = false;
 	
 	/**
 	 * @param path
@@ -51,7 +63,12 @@ public class Knight extends Sprite {
 		
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 8; j++) {
-				allImg[(8 * i) + j] = spriteSheet.getSubimage(j * 32, i * 32, 32, 32);
+				if((8 * i) + j == 37){
+					allImg[(8 * i) + j] = spriteSheet.getSubimage(j * 32, i * 32, 32, 16);
+				} else {
+					allImg[(8 * i) + j] = spriteSheet.getSubimage(j * 32, i * 32, 32, 32);
+				}
+				
 			}
 		}
 		
@@ -70,8 +87,14 @@ public class Knight extends Sprite {
 		jumpImg[2] = allImg[21]; //naked run jump
 		jumpImg[3] = allImg[22]; //naked stationary jump
 		
-		crouchImg[0] = allImg[7];
-		crouchImg[1] = allImg[23];
+		crouchImg[0] = allImg[7]; // armored crouch
+		crouchImg[1] = allImg[23]; // naked crouch
+		
+		dyingImg[0] = allImg[37];
+		dyingImg[1] = allImg[36];
+		dyingImg[2] = allImg[35];
+		dyingImg[3] = allImg[34];
+		
 		
 		
 		currentImage = idleImg[0];
@@ -79,9 +102,28 @@ public class Knight extends Sprite {
 		state = "idle";
 		direction = "right";
 	}
+	
+	public void death() {
+		dyingCount += 0.2;
+		setImage(dyingImg[3]);
+		dead = true;
+		
+	}
+	
+	public boolean getDead() {
+		return this.dying;
+	}
 
 	
 	public void update(int time) {
+		System.out.println();
+		
+		if(armored == false) {
+			if(coolDown > 0) {
+				coolDown -= 1;
+			}
+			
+		}
 		
 		switch (state) {
 		case "idle":
@@ -124,8 +166,12 @@ public class Knight extends Sprite {
 				setImage(crouchImg[1]);
 			}
 			break;
+	
 		}
+		
 	}
+	
+	
 	
 	public void setState(String state) {
 		this.state = state;
@@ -136,6 +182,9 @@ public class Knight extends Sprite {
 	}
 	
 	void draw(Graphics2D g2) {
+		if(dead) {
+			g2.drawImage(getImage(), getX(), 575, getImage().getWidth() * 3, getImage().getHeight() * 3, null);
+		}
         // scales and draws the image by 2
 		if(this.direction == "right") {
 			g2.drawImage(getImage(), getX(), getY(), getImage().getWidth() * 3, getImage().getHeight() * 3, null);
@@ -148,9 +197,22 @@ public class Knight extends Sprite {
 	}
 	
 	@Override
-	public boolean collidedWith(Sprite other) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean collidedWith(Sprite other){
+		boolean collided = false;
+		if (overlaps(other)) {
+			if (other instanceof Enemy) { // After collision with enemy, hit & disappear
+				if(armored == true) {
+					armored = false;
+				} else if(armored == false && coolDown == 0){
+					gameOver = true;
+				}
+			}
+		}
+		return collided;
+	}
+	
+	public boolean gameOver() {
+		return gameOver;
 	}
 	
 	@Override
