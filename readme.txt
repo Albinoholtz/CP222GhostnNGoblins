@@ -5,7 +5,7 @@ from the 1985 arcade game version of 'Ghosts N' Goblins'. By running the file
 'GameRunner.java', a frame will be opened and added to that frame, an instance of
 'GamePanel'. From there, the player will be prompted to press the spacebar, and
 the game will begin. The game is played using the arrow keys and spacebar, and
-points are added to the score if the player either kills a zombie. If the player is
+points are added to the score if the player kills a zombie. If the player is
 hit once, they will lose their armour. If they are hit twice, the game will end.
 
 Other Sources: Although most of the project was done from scratch, 
