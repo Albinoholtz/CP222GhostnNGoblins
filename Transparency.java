@@ -1,6 +1,11 @@
 import java.awt.*;
 import java.awt.image.*;
 
+/**
+ * @link //www.rgagnon.com/javadetails/java-0265.html 
+ * @author Réal Gagnon
+ */
+
 public class Transparency {
   public static Image makeColorTransparent
     (Image spriteSheetImg, final Color color) {
