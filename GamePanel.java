@@ -1,4 +1,6 @@
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -14,6 +16,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -22,13 +25,13 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel{
 	
+	int score = 10;
 	private int jumpCount = 0;
 	private int jumpVelocity = 0;
 	private int fps = 60;
 	private int distance = 0;
 	private int heroSpeed = 4;
 	private Image backgroundImg;
-	private Image scoreImg;
 	private InputListener listener;
 	private int cooldown = 0;
 	private boolean isRunning = true;
@@ -117,13 +120,12 @@ public class GamePanel extends JPanel{
 		Graphics2D g2 = (Graphics2D) g;
 		
 		setVisible(false);
+		setBackground(Color.white);
 		
 		ImageIcon tempImgOne = new ImageIcon("gameOver.png");
 		Image gameOverImg = tempImgOne.getImage();
 		gameSound.stop();
 		g2.drawImage(gameOverImg, 225, 150, 250 , 250, null);
-		g2.drawImage(scoreImg, 225, 350, 100 , 100, null);
-		
 		
 		
 	}
@@ -132,9 +134,6 @@ public class GamePanel extends JPanel{
 		//setting up all the stuffs
 		ImageIcon background = new ImageIcon("background.png");
 		backgroundImg = background.getImage();
-		
-		ImageIcon tempImgTwo = new ImageIcon("scoreText.png");
-		scoreImg = tempImgTwo.getImage();
 		
 		listener = new InputListener(this);
 		repaint();
@@ -249,6 +248,9 @@ public class GamePanel extends JPanel{
 			currentSprite.update(updates / 6);
 			//remove necessary non-structure sprites
 			if (currentSprite.isRemove()) {
+				if(currentSprite instanceof Zombie) {
+					score += 10;
+				}
 				spriteList.remove(i);
 			}
 		}	
@@ -281,7 +283,6 @@ public class GamePanel extends JPanel{
 
 		g2.fillRect(0, 0, 736, 758);
 		g2.drawImage(backgroundImg, (int) -distance/8, 150, 400 , 300, null);
-		g2.drawImage(scoreImg, 0, 0, 100 , 100, null);
 		//g.drawImage(backBuffer, 0, 0, this);
 
 
@@ -330,4 +331,3 @@ public class GamePanel extends JPanel{
 	    return clip;
 	    
 	}
-}
