@@ -296,6 +296,12 @@ public class GamePanel extends JPanel{
 		}
 		
 		// draw all other text
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        	g2.setFont(new Font("Segoe Script", Font.BOLD + Font.ITALIC, 40));
+        	g2.setPaint(Color.WHITE);
+
+        	// print score
+        	g2.drawString("Score: " + score, 10, 40);
 		
 	}
 
