@@ -1,13 +1,6 @@
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.concurrent.TimeUnit;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
@@ -200,7 +193,7 @@ public class Knight extends Sprite {
 	public boolean collidedWith(Sprite other){
 		boolean collided = false;
 		if (overlaps(other)) {
-			if (other instanceof Enemy) { // After collision with enemy, hit & disappear
+			if (other instanceof Enemy && ((Zombie) other).getState() == "walking") { // After collision with enemy, hit & disappear
 				if(armored == true) {
 					armored = false;
 				} else if(armored == false && coolDown == 0){
