@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -164,9 +163,9 @@ public class Zombie extends Enemy {
 	public Rectangle getHitbox() {
 		Rectangle hitbox = new Rectangle();
 		switch(state) {
-		case "walking":
-			hitbox.setSize(22, 32);
-			hitbox.setLocation(getX() + 1, getY());
+		case "spawning":
+			hitbox.setSize(0, 0);
+			hitbox.setLocation(0, 0);
 		default: // If dying or spawning, shouldn't hit
 			hitbox.setSize(22, 32);
 			hitbox.setLocation(getX() + 1, getY());
