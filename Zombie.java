@@ -4,6 +4,15 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * @author William & Quinn
@@ -81,7 +90,13 @@ public class Zombie extends Enemy {
 	public boolean collidedWith(Sprite other) {
 		boolean collided = false;
 		if (overlaps(other)) {
-			if (other instanceof Weapon) { // After collision with weapon, die
+			if (other instanceof Weapon && state != "dying") { // After collision with weapon, die
+				try {
+					playSound("ENEMYDEATH.wav");
+				} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				state = "dying";
 			}
 		}
@@ -152,13 +167,20 @@ public class Zombie extends Enemy {
 		case "walking":
 			hitbox.setSize(22, 32);
 			hitbox.setLocation(getX() + 1, getY());
-			break;
-		default: // If dying or spawning, should hit
+		default: // If dying or spawning, shouldn't hit
 			hitbox.setSize(22, 32);
 			hitbox.setLocation(getX() + 1, getY());
 			break;
 		}
 		return hitbox;
+	}
+	
+	public void playSound(String soundFile) throws MalformedURLException, UnsupportedAudioFileException, IOException, LineUnavailableException {
+	    File f = new File("./" + soundFile);
+	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
+	    Clip clip = AudioSystem.getClip();
+	    clip.open(audioIn);
+	    clip.start();
 	}
 
 	public String getState() {
