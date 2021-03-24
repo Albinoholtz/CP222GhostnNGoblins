@@ -1,6 +1,8 @@
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
@@ -159,6 +161,26 @@ public class Knight extends Sprite {
 	public String getState() {
 		return this.state;
 	}
-	
 
+
+	public String getDirection() {
+		return direction;
+	}
+
+
+	@Override
+	public Rectangle getHitbox() {
+		Rectangle hitbox = new Rectangle();
+		switch(state) {
+		case "crouch":
+			hitbox.setSize(22, 22);
+			hitbox.setLocation(getX() + 5, getY() + 10);
+			break;
+		default:
+			hitbox.setSize(22, 32);
+			hitbox.setLocation(getX() + 5, getY());
+			break;
+		}
+		return hitbox;
+	}
 }
