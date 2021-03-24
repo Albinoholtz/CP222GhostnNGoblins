@@ -1,6 +1,12 @@
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * @author William & Quinn
@@ -23,19 +29,42 @@ public class GameRunner {
 
 	private void run() {
 		JFrame mainWin = new JFrame("Ghosts N' Goblins");
+		JPanel start = new JPanel();
 		
-		mainWin.setSize(736, 758);
+		/*JButton button = new JButton("Start");
+		Listener listener = new Listener();
+		button.addActionListener(listener);
+		start.add(button);
+		mainWin.setLayout( new GridBagLayout() );
+		mainWin.add(button, new GridBagConstraints());*/
+		
 		
 		GamePanel gamePanel = new GamePanel();
-
-		
+		gamePanel.setFocusable(true);
+		gamePanel.requestFocusInWindow();
+	
 		mainWin.add(gamePanel);
+		
+		mainWin.setSize(736, 758);
 		mainWin.getContentPane().setBackground(Color.black);
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWin.setResizable(false);
 		mainWin.setVisible(true);
-		gamePanel.run();
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+		gamePanel.run();
 	}
+	
+	public class Listener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			
+		}
+		
+	}
+	
 }
