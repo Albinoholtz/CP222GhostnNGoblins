@@ -1,6 +1,8 @@
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 /**
@@ -17,6 +19,7 @@ public class Zombie extends Enemy {
 	double spawnCount = -0.5;
 	double dyingCount = -0.5;
 	int velocity = 0;
+	String direction = "right";
 	
 	/**
 	 * @param path
@@ -59,8 +62,14 @@ public class Zombie extends Enemy {
 		spriteSheetImg = Transparency.makeColorTransparent(spriteSheetImg, backCyan);
 		
 		spriteSheet = toBufferedImage(spriteSheetImg);
-		dyingImg[0] = spriteSheet.getSubimage(192, 160, 32, 32);
-		dyingImg[1] = spriteSheet.getSubimage(224, 160, 32, 32);
+		dyingImg[0] = spriteSheet.getSubimage(192, 128, 32, 32);
+		dyingImg[1] = spriteSheet.getSubimage(224, 128, 32, 32);
+		
+		if (getX() < 320) {
+			direction = "right";
+		} else {
+			direction = "left";
+		}
 		
 		state = "spawing";
 		currentImage = spawnImg[2];
@@ -89,38 +98,67 @@ public class Zombie extends Enemy {
 			if ((int) (spawnCount / 4) >= 3) {
 				state = "walking";
 				setImage(walkImg[time % 3]);
-				if (getX() < 320) { // set starting direction
+				if (direction == "right") { // set starting direction
 					velocity = 4;
 				} else {
 					velocity = -4;
 				}
 				break;
 			}
-			System.out.println(2 - (int) (spawnCount / 4));
 			setImage(spawnImg[2 - (int) (spawnCount / 4)]);
 			break;
 		case "walking":
 			setImage(walkImg[time % 3]);
 			if (getX() < -10) { // switch direction
 				velocity = 4;
+				direction = "right";
 			} else if (getX() > 680){ // switch direction
 				velocity = -4;
+				direction = "left";
 			}
 			
 			updateX(velocity);
 			break;
 		case "dying":
-			dyingCount += 0.1;
+			dyingCount += 0.2;
 			
-			if ((int) (dyingCount / 2) >= 2) {
+			if ((int) (dyingCount) >= 2) {
 				setRemove(true);
 				break;
 			}
 			
-			setImage(dyingImg[(int) (dyingCount / 2)]);
+			setImage(dyingImg[(int) (dyingCount)]);
 			break;
 			
-		}		
+		}	
+	}
+	
+	void draw(Graphics2D g2) {
+
+
+		// scales and draws the image by 2
+		if(direction == "right") {
+			g2.drawImage(getImage(), getX(), getY(), getImage().getWidth() * 3, getImage().getHeight() * 3, null);
+		} else {
+			g2.drawImage(getImage(), getX() + 66, getY(), -(getImage().getWidth() * 3), getImage().getHeight() * 3, null);
+		} 
+
+	}
+	
+	@Override
+	public Rectangle getHitbox() {
+		Rectangle hitbox = new Rectangle();
+		switch(state) {
+		case "walking":
+			hitbox.setSize(22, 32);
+			hitbox.setLocation(getX() + 1, getY());
+			break;
+		default: // If dying or spawning, should hit
+			hitbox.setSize(22, 32);
+			hitbox.setLocation(getX() + 1, getY());
+			break;
+		}
+		return hitbox;
 	}
 
 	public String getState() {
@@ -129,18 +167,6 @@ public class Zombie extends Enemy {
 
 	public void setState(String state) {
 		this.state = state;
-	}
-	
-	void draw(Graphics2D g2) {
-        
-		
-		// scales and draws the image by 2
-		if(direction == "right") {
-			g2.drawImage(getImage(), getX(), getY(), getImage().getWidth() * 3, getImage().getHeight() * 3, null);
-		} else {
-			g2.drawImage(getImage(), getX() + 66, getY(), -(getImage().getWidth() * 3), getImage().getHeight() * 3, null);
-		} 
-       
 	}
 	
 }
