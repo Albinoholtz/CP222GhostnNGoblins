@@ -38,6 +38,7 @@ public class GamePanel extends JPanel{
 	private Knight knight;
 	private boolean hurt = false;
 	Clip startSound;
+	Clip gameSound;
 	private ArrayList<Sprite> spriteList = new ArrayList<Sprite>();
 	ArrayList<Structure> groundArr = new ArrayList<Structure>();
 
@@ -82,7 +83,9 @@ public class GamePanel extends JPanel{
 		this.knight = knight;
 		spriteList.add(knight);
 
-		Zombie newZombie;
+		//test zombie
+		Zombie myMan = new Zombie(100, 575);
+		spriteList.add(myMan);
 		//runs while the game is going
 		while(isRunning) {
 			
@@ -90,11 +93,6 @@ public class GamePanel extends JPanel{
 				scrolling = -200;
 			}
 			long time = System.currentTimeMillis();
-			
-			if ( 1 > ((int) (Math.random() * 1000))) {
-				newZombie = new Zombie((int) (Math.random() * 736), 575);
-				spriteList.add(newZombie);
-			}
 
 			update(updates);
 			repaint();
@@ -119,6 +117,7 @@ public class GamePanel extends JPanel{
 		
 		ImageIcon tempImgOne = new ImageIcon("gameOver.png");
 		Image gameOverImg = tempImgOne.getImage();
+		gameSound.stop();
 		g2.drawImage(gameOverImg, 225, 150, 250 , 250, null);
 		g2.drawImage(scoreImg, 225, 350, 100 , 100, null);
 		
@@ -309,7 +308,7 @@ public class GamePanel extends JPanel{
 				start = true;
 				try {
 					startSound.stop();
-					playSound("GAMEMUSIC.wav");
+					gameSound = playSound("GAMEMUSIC.wav");
 				} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
