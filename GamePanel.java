@@ -13,22 +13,6 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel{
 	
-	try {
-			playSound("GAMEMUSIC.wav");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
 	private int jumpCount = 0;
 	private int jumpVelocity = 0;
 	private int fps = 60;
@@ -46,15 +30,6 @@ public class GamePanel extends JPanel{
 	ArrayList<Structure> groundArr = new ArrayList<Structure>();
 
 	public GamePanel() {
-		
-		//creating Knight
-		Knight knight = new Knight(320, 575);
-		this.knight = knight;
-		spriteList.add(knight);
-		
-		//test zombie
-		Zombie myMan = new Zombie(100, 575);
-		spriteList.add(myMan);
 	
 		//adding initial ground
 		int xCor = -92;
@@ -63,9 +38,7 @@ public class GamePanel extends JPanel{
 			groundArr.add(ground);
 			xCor += 46;
 			
-		}
-		
-		
+		}	
 	}
 	
 	public void checkCollisions(ArrayList<Sprite> spriteList) {
@@ -83,9 +56,16 @@ public class GamePanel extends JPanel{
 	}
 
 	public void run() {
-		//calls initialization to set up the frame
-		initialize();
 		int updates = 0;
+		
+		//creating Knight
+		Knight knight = new Knight(320, 575);
+		this.knight = knight;
+		spriteList.add(knight);
+
+		//test zombie
+		Zombie myMan = new Zombie(100, 575);
+		spriteList.add(myMan);
 		//runs while the game is going
 		while(isRunning) {
 			
@@ -234,7 +214,7 @@ public class GamePanel extends JPanel{
 				spriteList.remove(i);
 			}
 		}	
-
+		
 		for (int j = 0; j < groundArr.size(); j++) {
 			Sprite currentGround = groundArr.get(j);
 			//update structure sprites here
@@ -244,6 +224,7 @@ public class GamePanel extends JPanel{
 				groundArr.remove(j);
 			}
 		}
+		
 		if (cooldown != 0) {
 			cooldown -= 1;
 		}
@@ -268,13 +249,27 @@ public class GamePanel extends JPanel{
 		for(int i = 0; i < spriteList.size(); i ++) {
 			spriteList.get(i).draw(g2);
 		}
+		
+		// draw all other text
+		
+		
+		
 	}
-	
-	public void playSound(String soundFile) throws MalformedURLException, UnsupportedAudioFileException, IOException, LineUnavailableException {
-	    File f = new File("./" + soundFile);
-	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
-	    Clip clip = AudioSystem.getClip();
-	    clip.open(audioIn);
-	    clip.start();
+
+	public void start() {
+		boolean start = false;
+		initialize();
+		
+		
+		
+		repaint();
+		while(!start) {
+			System.out.print(""); // Weird bug if this is deleted
+			if (listener.isKeyDown(KeyEvent.VK_SPACE)) {
+				start = true;
+				
+			}
+		}
+		run();
 	}
 }
