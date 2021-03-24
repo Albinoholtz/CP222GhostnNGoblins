@@ -6,9 +6,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * This abstract class has instance variables to determine locations and abstract methods
- * that are used to update the instance. Implements CanCollide to make use of collision monitoring.
- * Also includes a draw method to draw sprite.
+ * This abstract class implements CanCollide to make use of collision monitoring.
+ * Includes a draw method to draw sprite.
  * @param path (image path), x, y
  */
 
@@ -97,8 +96,7 @@ abstract public class Sprite implements CanCollide {
 	abstract public void update(int time);
     
     /**
-     * This method checks to see if two sprites overlap with each other. This will come
-     * in handy when we're checking for collisions.
+     * This method checks to see if two sprites overlap with each other.
      * @param otherSprite
      * @return true if the sprites overlap
      */
