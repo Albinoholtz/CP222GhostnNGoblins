@@ -83,9 +83,7 @@ public class GamePanel extends JPanel{
 		this.knight = knight;
 		spriteList.add(knight);
 
-		//test zombie
-		Zombie myMan = new Zombie(100, 575);
-		spriteList.add(myMan);
+		Zombie newZombie;
 		//runs while the game is going
 		while(isRunning) {
 			
@@ -93,6 +91,11 @@ public class GamePanel extends JPanel{
 				scrolling = -200;
 			}
 			long time = System.currentTimeMillis();
+			
+			if ( 1 > ((int) (Math.random() * 500) - ((int) (score / 10)))) {
+				newZombie = new Zombie((int) (Math.random() * 736), 575);
+				spriteList.add(newZombie);
+			}
 
 			update(updates);
 			repaint();
