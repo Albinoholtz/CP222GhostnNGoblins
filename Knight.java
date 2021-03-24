@@ -162,5 +162,3 @@ public class Knight extends Sprite {
 	
 
 }
-
-}
