@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -102,23 +103,18 @@ abstract public class Sprite implements CanCollide {
      * @return true if the sprites overlap
      */
 
-    public boolean overlaps(Sprite otherSprite)
-    {
-    	 //Create a Rectangle that captures our boundaries
-   	 Rectangle ourBounds = new Rectangle();
-        ourBounds.setSize(getWidth(), getHeight());
-        ourBounds.setLocation(x, y);
-        
-        //Create another Rectangle that gets the other sprite's boundaries
-        Rectangle otherBounds = new Rectangle();
-        otherBounds.setSize(otherSprite.getWidth(), otherSprite.getHeight());
-        otherBounds.setLocation(otherSprite.getX(), otherSprite.getY());
-        
-        //Now we can use the handy intersects method that Rectangle provides!
-        return ourBounds.intersects(otherBounds);
+    public boolean overlaps(Sprite otherSprite) {
+    	//Create a Rectangle that captures our boundaries
+    	Rectangle ourBounds = getHitbox();
+
+    	//Create another Rectangle that gets the other sprite's boundaries
+    	Rectangle otherBounds = otherSprite.getHitbox();
+    	
+    	//Check if hitboxes overlap
+    	return ourBounds.intersects(otherBounds);
     }
     
-    //TODO change graphics type
+    public abstract Rectangle getHitbox();
     
     void draw(Graphics2D g2) {
         // scales and draws the image by 2
@@ -150,3 +146,5 @@ abstract public class Sprite implements CanCollide {
         return bimage;
     }
 }
+
+
