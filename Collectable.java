@@ -1,4 +1,4 @@
-package GhostAndGoblins;
+import java.awt.Rectangle;
 
 /**
  * @author William & Quinn
@@ -11,8 +11,8 @@ public class Collectable extends Sprite {
 	 * @param _x
 	 * @param _y
 	 */
-	public Collectable(String path, int _x, int _y) {
-		super(path, _x, _y);
+	public Collectable(int _x, int _y) {
+		super(_x, _y);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -23,9 +23,16 @@ public class Collectable extends Sprite {
 	}
 
 	@Override
-	public void update() {
+	public void update(int time) {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public Rectangle getHitbox() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 }
