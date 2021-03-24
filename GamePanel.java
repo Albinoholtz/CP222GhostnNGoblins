@@ -19,6 +19,8 @@ public class GamePanel extends JPanel{
 	private Image backgroundImg;
 	private InputListener listener;
 	private boolean isRunning = true;
+	private boolean jumping = false;
+	private long jumpingTime = 350;
 	private int scrolling;
 	private Knight knight;
 	private ArrayList<Sprite> spriteList = new ArrayList<Sprite>();
@@ -30,6 +32,10 @@ public class GamePanel extends JPanel{
 		Knight knight = new Knight(320, 575);
 		this.knight = knight;
 		spriteList.add(knight);
+		
+		//test zombie
+		Zombie myMan = new Zombie(100, 575);
+		spriteList.add(myMan);
 	
 		//adding initial ground
 		int xCor = -92;
@@ -86,13 +92,27 @@ public class GamePanel extends JPanel{
 	
 	public void update(int updates) {
 
-	
-		
+		if(jumping && this.knight.getState() != "runJump") {
+			this.knight.setState("stationaryJump");
+		} else if (jumping) {
+			this.knight.setState("runJump");
+		} else {
+			this.knight.setState("idle");
+		}
+
+		if(listener.isKeyDown(KeyEvent.VK_DOWN)) {
+			this.knight.setState("crouch");
+		}
+
 		if(listener.isKeyDown(KeyEvent.VK_RIGHT)) {
 			distance += 2;	
-			this.knight.setState("running");
+			if(jumping) {
+				this.knight.setState("runJump");
+			} else {
+				this.knight.setState("running");
+			}
 			this.knight.setDirection("right");
-			
+
 			// moves the sprites over based on player movement
 			for(int i = 0; i < groundArr.size(); i ++) {
 				groundArr.get(i).updateX(-heroSpeed);
@@ -100,21 +120,26 @@ public class GamePanel extends JPanel{
 			for (int i = 0; i < spriteList.size(); i++) {
 				spriteList.get(i).updateX(-heroSpeed);
 			}	
-			
+
 			// builds new ground
 			if(groundArr.get(groundArr.size()-1).getX() < 874){
 				int lastX = groundArr.get(groundArr.size()-1).getX();
 				Structure ground = new Structure(lastX + 46, 580);
 				groundArr.add(ground);
 			}
-		
+
+
 		} 
-		
+
 		if(listener.isKeyDown(KeyEvent.VK_LEFT)) {
 			distance -= 2;
-			this.knight.setState("running");
+			if(jumping) {
+				this.knight.setState("runJump");
+			} else {
+				this.knight.setState("running");
+			}
 			this.knight.setDirection("left");
-			
+
 			// moves the sprites over based on player movement
 			for(int i = 0; i < groundArr.size(); i ++) {
 				groundArr.get(i).updateX(heroSpeed);
@@ -122,7 +147,7 @@ public class GamePanel extends JPanel{
 			for (int i = 0; i < spriteList.size(); i++) {
 				spriteList.get(i).updateX(heroSpeed);
 			}
-				
+
 			// builds new ground
 			if(groundArr.get(0).getX() > -138) {
 				int firstX = groundArr.get(0).getX();
@@ -130,22 +155,27 @@ public class GamePanel extends JPanel{
 				groundArr.add(0, ground);
 			}
 		} 
-		
-		
+
 		if(listener.isKeyDown(KeyEvent.VK_UP)) {
-			System.out.println("UP");
+			if(knight.getY() == 575 && !jumping && knight.getState() != "crouch") {
+				jumping = true;
+			}
+
+			new Thread(new thread()).start();
 		}
-		if(listener.isKeyDown(KeyEvent.VK_DOWN)) {
-			System.out.println("DOWN");
+
+		if(jumping && knight.getY() > 465) {
+			knight.updateY(-6);
+		} else if (!jumping && knight.getY() < 575) {
+			knight.updateY(6);
 		}
-		
-		
+
 		// Update all sprites/ground
-		
+
 		for (int i = 0; i < spriteList.size(); i++) {
 			Sprite currentSprite = spriteList.get(i);
 			//check for collisions here TODO
-			
+
 			//update non-structure sprites here
 			currentSprite.update(updates / 6);
 			//remove necessary non-structure sprites
@@ -153,11 +183,11 @@ public class GamePanel extends JPanel{
 				spriteList.remove(i);
 			}
 		}	
-		
+
 		for (int j = 0; j < groundArr.size(); j++) {
 			Sprite currentGround = groundArr.get(j);
 			//check for collisions here TODO
-			
+
 			//update structure sprites here
 			currentGround.update(updates / 6);
 			//remove necessary non-structure sprites
@@ -166,15 +196,15 @@ public class GamePanel extends JPanel{
 			}
 		}		
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		
+
 		g2.fillRect(0, 0, 736, 758);
 		g2.drawImage(backgroundImg, (int) -distance/8, 150, 400 , 300, null);
 		//g.drawImage(backBuffer, 0, 0, this);
-	
+
 
 		// draw ground first
 		for (int j = 0; j < groundArr.size(); j++) {
@@ -185,4 +215,24 @@ public class GamePanel extends JPanel{
 			spriteList.get(i).draw(g2);
 		}
 	}
+
+	public class thread implements Runnable {
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(jumpingTime);
+				jumping = false;
+			} catch (Exception e) {
+				e.printStackTrace();
+				new Thread(this).start();
+				System.exit(0);
+			}
+			
+		}
+		
+	}
+
+	
+	
+	
 }
