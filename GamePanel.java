@@ -3,7 +3,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -26,6 +35,7 @@ public class GamePanel extends JPanel{
 	private boolean falling = false;
 	private int scrolling;
 	private Knight knight;
+	private boolean hurt = false;
 	private ArrayList<Sprite> spriteList = new ArrayList<Sprite>();
 	ArrayList<Structure> groundArr = new ArrayList<Structure>();
 
@@ -96,8 +106,18 @@ public class GamePanel extends JPanel{
 				updates = 0;
 			}
 		}
-		//"closes" the window when the game stops running
+		
+		Graphics g = this.getGraphics();
+		Graphics2D g2 = (Graphics2D) g;
+		
 		setVisible(false);
+		
+		ImageIcon tempImg = new ImageIcon("gameOver.png");
+		Image gameOverImg = tempImg.getImage();
+		g2.drawImage(gameOverImg, 225, 150, 250 , 250, null);
+		
+		
+		
 	}
 
 	public void initialize(){
@@ -237,6 +257,11 @@ public class GamePanel extends JPanel{
 		}
 		
 		checkCollisions(spriteList);
+		
+		if(knight.gameOver() == true) {
+			isRunning = false;
+		}
+		
 	}
 
 	@Override
