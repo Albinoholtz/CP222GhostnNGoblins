@@ -30,6 +30,13 @@ public class GamePanel extends JPanel{
 	ArrayList<Structure> groundArr = new ArrayList<Structure>();
 
 	public GamePanel() {
+		
+		try {
+			playSound("GAMESTART.wav");
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	
 		//adding initial ground
 		int xCor = -92;
@@ -271,5 +278,13 @@ public class GamePanel extends JPanel{
 			}
 		}
 		run();
+	}
+	
+	public void playSound(String soundFile) throws MalformedURLException, UnsupportedAudioFileException, IOException, LineUnavailableException {
+	    File f = new File("./" + soundFile);
+	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
+	    Clip clip = AudioSystem.getClip();
+	    clip.open(audioIn);
+	    clip.start();
 	}
 }
