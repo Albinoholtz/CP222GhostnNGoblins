@@ -13,6 +13,22 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel{
 	
+	try {
+			playSound("GAMEMUSIC.wav");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 	private int jumpCount = 0;
 	private int jumpVelocity = 0;
 	private int fps = 60;
@@ -252,5 +268,13 @@ public class GamePanel extends JPanel{
 		for(int i = 0; i < spriteList.size(); i ++) {
 			spriteList.get(i).draw(g2);
 		}
+	}
+	
+	public void playSound(String soundFile) throws MalformedURLException, UnsupportedAudioFileException, IOException, LineUnavailableException {
+	    File f = new File("./" + soundFile);
+	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
+	    Clip clip = AudioSystem.getClip();
+	    clip.open(audioIn);
+	    clip.start();
 	}
 }
