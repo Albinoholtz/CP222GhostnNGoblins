@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
@@ -17,6 +18,7 @@ public class Knight extends Sprite {
 	BufferedImage[] crouchImg = new BufferedImage[2];
 	BufferedImage[] crouchThrowImg = new BufferedImage[4];
 	String state = null;
+	String direction = null;
 	boolean clothed = true;
 	
 	/**
@@ -65,11 +67,13 @@ public class Knight extends Sprite {
 		
 		currentImage = idleImg[0];
 		setImage(currentImage);
-		state = "running";
+		state = "idle";
+		direction = "right";
 	}
 
 	
 	public void update(int time) {
+		
 		switch (state) {
 		case "idle":
 			setImage(idleImg[0]);
@@ -80,8 +84,24 @@ public class Knight extends Sprite {
 		}
 	}
 	
-	public void move() {
-		
+	public void setState(String state) {
+		this.state = state;
+	}
+	
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+	
+	void draw(Graphics2D g2) {
+        // scales and draws the image by 2
+		if(this.direction == "right") {
+			g2.drawImage(getImage(), getX(), getY(), getImage().getWidth() * 3, getImage().getHeight() * 3, null);
+		} 
+		if(this.direction == "left"){
+			
+			g2.drawImage(getImage(), getX() + 96, getY(), -(getImage().getWidth() * 3), getImage().getHeight() * 3, null);
+		} 
+       
 	}
 	
 	@Override
