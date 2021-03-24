@@ -1,3 +1,4 @@
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -12,15 +13,17 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel{
 	
+	private int jumpCount = 0;
+	private int jumpVelocity = 0;
 	private int fps = 60;
 	private int distance = 0;
 	private int heroSpeed = 4;
-	private String direction = "right";
 	private Image backgroundImg;
 	private InputListener listener;
+	private int cooldown = 0;
 	private boolean isRunning = true;
 	private boolean jumping = false;
-	private long jumpingTime = 350;
+	private boolean falling = false;
 	private int scrolling;
 	private Knight knight;
 	private ArrayList<Sprite> spriteList = new ArrayList<Sprite>();
@@ -47,6 +50,20 @@ public class GamePanel extends JPanel{
 		}
 		
 		
+	}
+	
+	public void checkCollisions(ArrayList<Sprite> spriteList) {
+    	ArrayList<Sprite> removeIndex = new ArrayList<Sprite>();
+    	
+    	for (int i = 0; i < spriteList.size(); i++) {
+    		for (int j = 0; j < spriteList.size(); j++) {
+    			if (i != j) {
+    				if (spriteList.get(i).collidedWith(spriteList.get(j))) {
+    					removeIndex.add(spriteList.get(i));
+    				}
+    			}
+    		}
+    	}
 	}
 
 	public void run() {
@@ -103,9 +120,10 @@ public class GamePanel extends JPanel{
 		if(listener.isKeyDown(KeyEvent.VK_DOWN)) {
 			this.knight.setState("crouch");
 		}
-
+		
 		if(listener.isKeyDown(KeyEvent.VK_RIGHT)) {
-			distance += 2;	
+			distance += 2;
+			
 			if(jumping) {
 				this.knight.setState("runJump");
 			} else {
@@ -157,25 +175,42 @@ public class GamePanel extends JPanel{
 		} 
 
 		if(listener.isKeyDown(KeyEvent.VK_UP)) {
-			if(knight.getY() == 575 && !jumping && knight.getState() != "crouch") {
+			if(jumpCount == 0 && knight.getState() != "crouch" && !jumping ) {
 				jumping = true;
+				jumpCount = 40;
+				jumpVelocity = -20;
 			}
-
-			new Thread(new thread()).start();
+		}
+		
+		if (listener.isKeyDown(KeyEvent.VK_SPACE)) {
+			if (cooldown == 0) {
+				if (knight.getState() == "crouch") {
+					Weapon weapon = new Weapon(320, knight.getY() + 10, "lance", knight.getDirection());
+					spriteList.add(weapon);
+				} else {
+					Weapon weapon = new Weapon(320, knight.getY(), "lance", knight.getDirection());
+					spriteList.add(weapon);
+				}
+				cooldown = 20;
+				
+			}
 		}
 
-		if(jumping && knight.getY() > 465) {
-			knight.updateY(-6);
-		} else if (!jumping && knight.getY() < 575) {
-			knight.updateY(6);
+		if (jumping) {
+			if (jumpCount == 0) {
+				knight.updateY(jumpVelocity);
+				jumping = false;
+			} else {
+				jumpCount -= 1;
+				knight.updateY(jumpVelocity);
+				jumpVelocity += 1;
+			}
 		}
-
+		
 		// Update all sprites/ground
 
 		for (int i = 0; i < spriteList.size(); i++) {
 			Sprite currentSprite = spriteList.get(i);
-			//check for collisions here TODO
-
 			//update non-structure sprites here
 			currentSprite.update(updates / 6);
 			//remove necessary non-structure sprites
@@ -186,15 +221,18 @@ public class GamePanel extends JPanel{
 
 		for (int j = 0; j < groundArr.size(); j++) {
 			Sprite currentGround = groundArr.get(j);
-			//check for collisions here TODO
-
 			//update structure sprites here
 			currentGround.update(updates / 6);
 			//remove necessary non-structure sprites
 			if (currentGround.isRemove()) {
 				groundArr.remove(j);
 			}
-		}		
+		}
+		if (cooldown != 0) {
+			cooldown -= 1;
+		}
+		
+		checkCollisions(spriteList);
 	}
 
 	@Override
@@ -215,24 +253,4 @@ public class GamePanel extends JPanel{
 			spriteList.get(i).draw(g2);
 		}
 	}
-
-	public class thread implements Runnable {
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(jumpingTime);
-				jumping = false;
-			} catch (Exception e) {
-				e.printStackTrace();
-				new Thread(this).start();
-				System.exit(0);
-			}
-			
-		}
-		
-	}
-
-	
-	
-	
 }
