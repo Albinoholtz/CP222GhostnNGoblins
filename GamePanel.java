@@ -331,3 +331,4 @@ public class GamePanel extends JPanel{
 	    return clip;
 	    
 	}
+}
