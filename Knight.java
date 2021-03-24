@@ -19,7 +19,7 @@ public class Knight extends Sprite {
 	BufferedImage[] crouchThrowImg = new BufferedImage[4];
 	String state = null;
 	String direction = null;
-	boolean clothed = true;
+	boolean armored = false;
 	
 	/**
 	 * @param path
@@ -57,12 +57,19 @@ public class Knight extends Sprite {
 			runImg[i] = allImg[i];
 		}
 		for (int i = 4; i < 8; i++) { // Adds images to run images array
-			runImg[i] = allImg[i +16];
+			runImg[i] = allImg[i + 12];
 		}
 		
 		// Adds images to idle images array
 		idleImg[0] = allImg[4];
 		idleImg[1] = allImg[20];
+		jumpImg[0] = allImg[5]; //armored run jump
+		jumpImg[1] = allImg[6]; //armored stationary jump
+		jumpImg[2] = allImg[21]; //naked run jump
+		jumpImg[3] = allImg[22]; //naked stationary jump
+		
+		crouchImg[0] = allImg[7];
+		crouchImg[1] = allImg[23];
 		
 		
 		currentImage = idleImg[0];
@@ -76,10 +83,44 @@ public class Knight extends Sprite {
 		
 		switch (state) {
 		case "idle":
-			setImage(idleImg[0]);
+			if(armored) {
+				setImage(idleImg[0]);
+			} else {
+				setImage(idleImg[1]);
+			}
 			break;
+			
 		case "running":
-			setImage(runImg[Math.abs(-3 + ((int) (time)) % 6)]);
+			if(armored) {
+				setImage(runImg[Math.abs(-3 + ((int) (time)) % 6)]);
+			} else {
+				setImage(runImg[Math.abs(-3 + ((int) (time)) % 6) + 4]);
+			}
+			
+			break;
+			
+		case "runJump":
+			if(armored) {
+				setImage(jumpImg[0]);
+			} else {
+				setImage(jumpImg[2]);
+			}
+			break;
+			
+		case "stationaryJump":
+			if(armored) {
+				setImage(jumpImg[1]);
+			} else {
+				setImage(jumpImg[3]);
+			}
+			break;
+			
+		case "crouch":
+			if(armored) {
+				setImage(crouchImg[0]);
+			} else {
+				setImage(crouchImg[1]);
+			}
 			break;
 		}
 	}
@@ -115,9 +156,11 @@ public class Knight extends Sprite {
 		return;
 	}
 	
-	@Override
-	public void updateY(int delta) {
-		return;
+	public String getState() {
+		return this.state;
 	}
+	
+
+}
 
 }
