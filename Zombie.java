@@ -131,4 +131,16 @@ public class Zombie extends Enemy {
 		this.state = state;
 	}
 	
+	void draw(Graphics2D g2) {
+        
+		
+		// scales and draws the image by 2
+		if(direction == "right") {
+			g2.drawImage(getImage(), getX(), getY(), getImage().getWidth() * 3, getImage().getHeight() * 3, null);
+		} else {
+			g2.drawImage(getImage(), getX() + 66, getY(), -(getImage().getWidth() * 3), getImage().getHeight() * 3, null);
+		} 
+       
+	}
+	
 }
