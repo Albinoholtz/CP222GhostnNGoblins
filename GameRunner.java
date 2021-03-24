@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,15 +30,6 @@ public class GameRunner {
 
 	private void run() {
 		JFrame mainWin = new JFrame("Ghosts N' Goblins");
-		JPanel start = new JPanel();
-		
-		/*JButton button = new JButton("Start");
-		Listener listener = new Listener();
-		button.addActionListener(listener);
-		start.add(button);
-		mainWin.setLayout( new GridBagLayout() );
-		mainWin.add(button, new GridBagConstraints());*/
-		
 		
 		GamePanel gamePanel = new GamePanel();
 		gamePanel.setFocusable(true);
@@ -53,8 +45,7 @@ public class GameRunner {
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		
-		gamePanel.run();
+		gamePanel.start();
 	}
 	
 	public class Listener implements ActionListener{
