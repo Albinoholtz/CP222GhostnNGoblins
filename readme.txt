@@ -13,3 +13,6 @@ the file 'Transparency.java' was found online and copied directly. Here is the a
 link for the original file. 
 Link: https://www.rgagnon.com/javadetails/java-0265.html 
 Author: Réal Gagnon
+
+This project is currently archived and was created as a final project for the course
+"Computer Science 2"
